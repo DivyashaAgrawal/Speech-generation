@@ -7,13 +7,17 @@ from pymarkovchain import MarkovChain
 
 class AppURLopener(urllib.request.FancyURLopener):
     version = "Mozilla/5.0"
+    
 def get_links(url, domain):
+    """ Fetching urls """
  opener = AppURLopener()
  connection = opener.open(url)
  dom = lxml.html.fromstring(connection.read())
  for link in dom.xpath('//a/@href'):
  	if ( link.startswith("speech") and link.endswith("htm") ):
  		yield domain + link
+        
+        
 def get_text(url):
  g = Goose() 
  article = g.extract(url=url)
@@ -27,7 +31,7 @@ if (__name__ == "__main__"):
 
 for file in os.listdir("."):
  if file.endswith(".speech"):
- 	os.system("cat "+ file + " >> all.speeches")
+ 	os.system("cat "+ file + " >> all.speeches") # Saved all the texts from the sppeches to a file(all.sppeches)
 
 with codecs.open("all.speeches", "r", "utf-8-sig") as text_file:
  r = text_file.read()
@@ -57,7 +61,7 @@ plt.setp(xtickNames, rotation=45, fontsize=10)
 ax.legend( (rect[0], ('') ))
 plt.show()
 
-
+# POS Tagging
 tagged = nltk.pos_tag(tokens)
 
 counts = Counter(tag for word,tag in tagged)
@@ -75,7 +79,7 @@ dist.plot(60, cumulative=False)
 text = nltk.Text(_tokens)
 collocation = text.collocations(num=60)
 
-
+# Chuncking
 nouns = [chunk for chunk in ne_chunk(tagged) if isinstance(chunk, Tree)]
 persons = []
 locations = []
